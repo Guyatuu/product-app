@@ -89,7 +89,7 @@ public function destroy(Product $products)
 $products->delete();
 return redirect()->route('products.index')
 ->with('success','Product deleted
-successfully');
+successfully!');
 }
 }
 
