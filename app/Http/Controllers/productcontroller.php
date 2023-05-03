@@ -11,8 +11,9 @@ class ProductController extends Controller
 */
 public function index()
 {
-$products= Products::latest()->paginate(5);
-return view('products.index',compact('products'));
+    $grace= Products::latest()->paginate(5);
+    //return view('products.index',compact('products'));
+    return view('products.index', ['products' => $grace]);
 }
 /**
 * Show the form for creating a new resource.
@@ -21,7 +22,7 @@ return view('products.index',compact('products'));
 */
 public function create()
 {
-return view('products.create');
+    return view('products.create');
 }
 /**
 * Store a newly created resource in storage.
@@ -31,14 +32,16 @@ return view('products.create');
 */
 public function store(Request $request)
 {
-$request->validate([
-'name' => 'required',
-'detail' => 'required',
-]);
-Products::create($request->all());
-return redirect()->route('products.index')
-->with('success','Product created
-successfully.');
+    $request->validate([
+    'name' => 'required',
+    'detail' => 'required',
+    ]);
+
+    Products::create($request->all());
+
+    return redirect()
+                    ->route('products.index')
+                    ->with('success','Product created successfully.');
 }
 /**
 * Display the specified resource.
@@ -46,19 +49,31 @@ successfully.');
 * @param \App\Models\Product $products
 * @return \Illuminate\Http\Response
 */
-public function show(Product $products)
+
+/*
+public function show(Products $products)
 {
-return view('products.show',compact('products'));
+    return view('products.show',compact('products'));
 }
+*/
+
+public function show($id)
+{
+    $product = Products::findorFail($id);
+    return view('products.show',['product' => $product]);
+}
+
+
 /**
 * Show the form for editing the specified resource.
 *
 * @param \App\Models\Products $products
 * @return \Illuminate\Http\Response
 */
-public function edit(Product $products)
+public function edit($id)
 {
-return view('products.edit',compact('product'));
+    $product = Products::findorFail($id);
+    return view('products.edit',['products' => $product]);
 }
 /**
 * Update the specified resource in storage.
@@ -69,14 +84,15 @@ return view('products.edit',compact('product'));
 */
 public function update(Request $request, Products $products)
 {
-$request->validate([
-'name' => 'required',
-'detail' => 'required',
-]);
-$products->update($request->all());
-return redirect()->route('products.index')
-->with('success','Product updated
-successfully');
+    $request->validate([
+    'name' => 'required',
+    'detail' => 'required',
+    ]);
+    
+    $products->update($request->all());
+    return redirect()->route('products.index')
+    ->with('success','Product updated
+    successfully');
 }
 /**
 * Remove the specified resource from storage.
@@ -84,7 +100,7 @@ successfully');
 * @param \App\Models\Products $products
 * @return \Illuminate\Http\Response
 */
-public function destroy(Product $products)
+public function destroy(Products $products)
 {
 $products->delete();
 return redirect()->route('products.index')
